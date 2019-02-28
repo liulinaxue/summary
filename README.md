@@ -59,3 +59,48 @@ _JS有eval和with两种机制，但两者都会导致代码性能差。_
 
 除了Global Scope，只有function可以创建新作用域（Function Scope）。不过es6中引入了块级作用域
 with和try catch都可以创建Block Scope
+
+
+## eventloop task(macrotask) microtask
+
+### promise.then(onFulfilled, onRejected)
+
+onFulfilled or onRejected must not be called until the execution context stack contains only platform code. [3.1].
+
+Here “platform code” means engine, environment, and promise implementation code. In practice, this requirement ensures that onFulfilled and onRejected execute asynchronously, after the event loop turn in which then is called, and with a fresh stack. This can be implemented with either a “macro-task” mechanism such as setTimeout or setImmediate, or with a “micro-task” mechanism such as MutationObserver or process.nextTick. Since the promise implementation is considered platform code, it may itself contain a task-scheduling queue or “trampoline” in which the handlers are called.
+
+### Event Loop规范
+
+每个浏览器环境，至多有一个event loop。
+一个event loop可以有1个或多个task queue。
+一个task queue是一列有序的task，用来做以下工作：Events task，Parsing task， Callbacks task， Using a resource task， Reacting to DOM manipulation task等。
+
+### Jobs and Job Queues规范 _micro-task在ES2015规范中称为Job_
+一个Job Queue是一个先进先出的队列。一个ECMAScript实现必须至少包含以下两个Job Queue：
+
+1.ScriptJobs	Jobs that validate and evaluate ECMAScript Script and Module source text. See clauses 10 and 15.
+2.PromiseJobs	Jobs that are responses to the settlement of a Promise (see 25.4).
+
+单个Job Queue中的PendingJob总是按序（先进先出）执行，但多个Job Queue可能会交错执行。
+
+_promise.then的执行其实是向PromiseJobs添加Job。_
+
+**事件循环不间断在跑，执行任何进入队列的task。一个事件循环可以有多个task source，每个task source保证自己的任务列表的执行顺序，但由浏览器在（事件循环的）每轮中挑选某个task source的task。**
+
+**microtask queue在回调之后执行，只要没有其它JS在执行中，并且在每个task的结尾。microtask中添加的microtask也被添加到microtask queue的末尾并处理。microtask包括mutation observer callbacks和promise callbacks。**
+
+```
+(function test() {
+    setTimeout(function() {console.log(4)}, 0);
+    new Promise(function executor(resolve) {
+        console.log(1);
+        for( var i=0 ; i<10000 ; i++ ) {
+            i == 9999 && resolve();
+        }
+        console.log(2);
+    }).then(function() {
+        console.log(5);
+    });
+    console.log(3); // output:1,2,3,5,4
+})()
+```
