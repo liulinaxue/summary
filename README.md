@@ -55,3 +55,6 @@ JavaScript采用Lexical Scope。
 变量的查找是从里往外的，直到最顶层（全局作用域），并且一旦找到，即停止向上查找。所以内层的变量可以shadow外层的同名变量。
 
 _JS有eval和with两种机制，但两者都会导致代码性能差。_
+
+除了Global Scope，只有function可以创建新作用域（Function Scope）。不过es6中引入了块级作用域
+with和try catch都可以创建Block Scope
