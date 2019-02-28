@@ -91,15 +91,15 @@ _promise.then的执行其实是向PromiseJobs添加Job。_
 
 ```
 (function test() {
-    setTimeout(function() {console.log(4)}, 0);
+    setTimeout(function() {console.log(4)}, 0); //当前task运行，执行代码。首先setTimeout的callback被添加到tasks queue中；
     new Promise(function executor(resolve) {
         console.log(1);
         for( var i=0 ; i<10000 ; i++ ) {
             i == 9999 && resolve();
         }
         console.log(2);
-    }).then(function() {
-        console.log(5);
+    }).then(function() { //promise.then的callback被添加到microtasks queue中； 
+        console.log(5); //已到当前task的end，执行microtasks，输出 5;
     });
     console.log(3); // output:1,2,3,5,4
 })()
