@@ -41,7 +41,8 @@ hello
   4. call/apply -> 指定的对象
   5. bind -> 指定对象 
   6. 箭头函数调用 -> execution context
-  7. DOM event handler ->触发事件的dom元素_
+  7. DOM event handler ->触发事件的dom元素
+  
 _在箭头函数中，this由词法/静态作用域设置（set lexically）。它被设置为包含它的execution context的this，并且不再被调用方式影响（call/apply/bind）。_
 _注意，当用call和apply而传进去作为this的不是对象时，将会调用内置的ToObject操作转换成对象。所以4将会装换成new Number(4)，而null/undefined由于无法转换成对象，全局对象将作为this。_
  _f.bind(someObject)会创建新的函数（函数体和作用域与原函数一致），但this被永久绑定到someObject，不论你怎么调用。_
