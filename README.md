@@ -107,8 +107,8 @@ _promise.then的执行其实是向PromiseJobs添加Job。_
 _setTimeout waits for a given delay then schedules a new task for its callback. _
 _Microtasks are usually scheduled for things that should happen straight after the currently executing script, or to make something async without taking the penalty of a whole new task._
 _Any additional microtasks queued during microtasks are added to the end of the queue and also processed. _
-_Once a promise settles, or if it has already settled, it queues a microtask for its reactionary callbacks. This ensures promise callbacks are async even if the promise has already settled. _
-_ the currently running script must finish before microtasks are handled_
+_Once a promise settles, or if it has already settled, it queues a microtask for its reactionary callbacks. This ensures promise callbacks are async even if the promise has already settled._
+_the currently running script must finish before microtasks are handled_
 _microtasks always happen before the next task_
 **Some browsers running promise callbacks after setTimeout. It's likely that they're calling promise callbacks as part of a new task rather than as a microtask.**
 **Treating promises as tasks leads to performance problems, as callbacks may be unnecessarily delayed by task-related things such as rendering. It also causes non-determinism due to interaction with other task sources, and can break interactions with other APIs, but more on that later.**
