@@ -112,8 +112,7 @@ _ the currently running script must finish before microtasks are handled_
 _microtasks always happen before the next task_
 **Some browsers running promise callbacks after setTimeout. It's likely that they're calling promise callbacks as part of a new task rather than as a microtask.**
 **Treating promises as tasks leads to performance problems, as callbacks may be unnecessarily delayed by task-related things such as rendering. It also causes non-determinism due to interaction with other task sources, and can break interactions with other APIs, but more on that later.**
-_T1.asks execute in order, and the browser may render between them
-2.Microtasks execute in order, and are executed:
- 1.after every callback, as long as no other JavaScript is mid-execution
- 2.at the end of each task
-_
+_- 1.asks execute in order, and the browser may render between them
+ - 2.Microtasks execute in order, and are executed:
+  - 1.after every callback, as long as no other JavaScript is mid-execution
+  - 2.at the end of each task_
