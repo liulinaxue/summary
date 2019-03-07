@@ -124,3 +124,6 @@ _microtasks always happen before the next task_
  - 2.Microtasks execute in order, and are executed:
   - 1.after every callback, as long as no other JavaScript is mid-execution
   - 2.at the end of each task
+  
+解析结束后的操作
+在此阶段，浏览器会将文档标注为交互状态，并开始解析那些**处于“deferred”**模式的脚本，也就是那些应在文档解析完成后才执行的脚本。然后，**文档状态将设置为“完成”**，一个**“加载”**事件将随之触发。
